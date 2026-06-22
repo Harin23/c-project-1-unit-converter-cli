@@ -43,6 +43,8 @@ void clearStdinBuffer(void) {
 }
 
 
+enum { MENU_LENGTH = 1, MENU_MASS, MENU_TEMP, MENU_QUIT };
+
 int main () {
     int menu_option = 0;
     int from_unit =0;
@@ -51,16 +53,13 @@ int main () {
     const char *a_units[3] = { "m", "kg", "C" };
     const char *b_units[3] = { "ft", "lbs", "F" };
 
-    while (menu_option != 4) {
+    while (menu_option != MENU_QUIT) {
         printf("Unit Converter\n1. Length (meters <-> feet)\n2. Mass (kg <-> pounds)\n3. Temperature (C <-> F)\n4. Quit\nChoice:");
         scanf("%d", &menu_option);
 
-        if (menu_option == 4) return 0;
-        if (menu_option != 1 && menu_option != 2 && menu_option != 3) {
-            // perror("Invalid selection");
-            // return 1;
-
-            clearStdinBuffer();
+        if (menu_option == MENU_QUIT) return 0;
+        if (menu_option != MENU_LENGTH && menu_option != MENU_MASS && menu_option != MENU_TEMP) {
+            clearStdinBuffer(); //todo prob should clear buffer only if scanf fails
             printf("Invalid selection\n\n");
             menu_option=0;
             continue;
@@ -74,9 +73,7 @@ int main () {
         }else if (from_unit == 1) {
             a=0;
         }else {
-            // perror("Invalid selection");
-            // return 1;
-            clearStdinBuffer();
+            clearStdinBuffer(); //todo prob should clear buffer only if scanf fails
             printf("Invalid selection\n\n");
             from_unit=0;
             continue;
@@ -85,13 +82,9 @@ int main () {
         printf("Enter amount:");
         scanf("%lf", from_unit ? &b : &a);
 
-        if (menu_option == 1) {
-            length_converter(&a, &b);
-        }else if (menu_option == 2) {
-            mass_converter(&a, &b);
-        }else if (menu_option == 3) {
-            temperature_converter(&a, &b);
-        }
+        if (menu_option == MENU_LENGTH) length_converter(&a, &b);
+        else if (menu_option == MENU_MASS) mass_converter(&a, &b);
+        else if (menu_option == MENU_TEMP) temperature_converter(&a, &b);
 
         printf("Unit A: %lf [%s] and B: %lf [%s]\n\n", a, a_units[menu_option - 1], b, b_units[menu_option - 1] );
     }
